@@ -3,6 +3,7 @@ package fa.dfa;
 import fa.State;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.HashMap;
 
 
@@ -16,33 +17,42 @@ import java.util.HashMap;
  * @author Keegan Saunders
  */
 public class DFA implements DFAInterface {
+    DFAState start;
+    private Map<String, DFAState> transitions;
+    private Set<DFAState> states;
+    private Set<DFAState> finals;
+    private Set<String> alphabet;
 
     public DFA(){
-        HashMap<String, DFAstate> transitions = new HashMap<String, DFAstate>();
-        HashMap<String, DFAState> sigma = new HashSet<String, DFAState>();
+        transitions = new HashMap<String, DFAState>();
+        states = new HashSet<DFAState>();
+        finals = new HashSet<DFAState>();
+        alphabet = new HashSet<String>();
+        
     }
 
     @Override
     public void addStartState(String name) {
-        sigma.add(name, new DFAState(name, "START"));
+        start = new DFAState(name);
+        states.add(start);
     }
 
     @Override
     public void addState(String name) {
-        sigma.add(name, new DFAState(name, "NORMAL"));
-
+        states.add(new DFAState(name));
     }
 
     @Override
     public void addFinalState(String name) {
-        if(sigma.contains(name){
-
-        }        sigma.add(name, new DFAState(name, "NORMAL"));
+        DFAState state = new DFAState(name);
+        states.add(state);
+        finals.add(state);
     }
 
     @Override
     public void addTransition(String fromState, char onSymb, String toState) {
-        // TODO Auto-generated method stub
+        String key = fromState+onSymb;
+        if(sigma.containsKey(fromState) && sigma.containsKey(toState))
 
     }
 
