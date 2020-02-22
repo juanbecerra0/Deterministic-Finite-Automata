@@ -18,6 +18,66 @@ import java.util.HashMap;
  */
 public class DFA implements DFAInterface {
 
+    /**
+     * Class used as a key value pair for transition functions
+     */
+    private class StateTransitionPair {
+
+        // The hashcode computed from the state name string and transition char
+        private String state;
+        private char transition;
+        private int hashCode;
+
+        /**
+         * Constructor for StateTransitionPair. Simply creates a hashcode from the 
+         * concatenated state name and a transition.
+         * 
+         * @param s
+         * @param c
+         */
+        public StateTransitionPair(String s, char c) {
+            this.state = s;
+            this.transition = c;
+            this.hashCode = (s + c).hashCode();
+        }
+
+        /**
+         * Returns unique computer hashcode.
+         * 
+         * Used to ensure that the key value of transitions Map is unique.
+         */
+        @Override
+        public int hashCode() {
+            return hashCode;
+        }
+
+        /**
+         * @return the state string
+         */
+        public String getState() {
+            return state;
+        }
+
+        /**
+         * @return the transition char
+         */
+        public char getTransition() {
+            return transition;
+        }
+
+        /**
+         * Returns whether two STP's are equal.
+         * 
+         * Used to ensure that the key value of transitions Map is unique.
+         */
+        @Override
+        public boolean equals(Object object) {
+            StateTransitionPair otherSTP = (StateTransitionPair) object;
+            return this.hashCode() == otherSTP.hashCode();
+        }
+
+    }
+
     // The start state of the DFA. Included in "states" and can be included in "finals"
     private DFAState startState;
     // The set of all states, including all finals and the start state.
@@ -26,8 +86,11 @@ public class DFA implements DFAInterface {
     private Set<DFAState> finalStates;
     // The set of all known alphabet symbols.
     private Set<Character> alphabet;
-    // The HashMap of all transitions. Given a key (concat String of state name and transition), returns a state object reference.
-    private Map<String, DFAState> transitions;
+    // The HashMap of all transitions. Given a key, a StateTransitionPair object defined above, returns a state object reference.
+    private Map<StateTransitionPair, DFAState> transitions;
+
+    // The current state in the DFA simulation. Used in "accepts" and "getToState" methods
+    private DFAState currentState;
 
     /**
      * Initializes all set variables
@@ -36,7 +99,7 @@ public class DFA implements DFAInterface {
         states = new HashSet<DFAState>();
         finalStates = new HashSet<DFAState>();
         alphabet = new HashSet<Character>();
-        transitions = new HashMap<String, DFAState>();
+        transitions = new HashMap<StateTransitionPair, DFAState>();
     }
 
     @Override
@@ -44,6 +107,9 @@ public class DFA implements DFAInterface {
         // Initializes the start state and adds it to the set of all states.
         startState = new DFAState(name);
         states.add(startState);
+
+        // Also, initialize the start state as the currentState
+        currentState = startState;
     }
 
     @Override
@@ -77,11 +143,11 @@ public class DFA implements DFAInterface {
         // Add symbol to alphabet if it is not already in there
         alphabet.add(onSymb);
 
-        // Create a "key" values, which is the name of a state and the symbol concatenated.
-        String inputKey = fromState + onSymb;
+        // Create a "key" values, which is a StateTransitionPair object
+        StateTransitionPair stp = new StateTransitionPair(fromState, onSymb);
 
         // Maps the key to the corresponding state
-        transitions.put(inputKey, newState);
+        transitions.put(stp, newState);
     }
 
     @Override
@@ -110,20 +176,71 @@ public class DFA implements DFAInterface {
 
     @Override
     public DFA complement() {
-        // TODO Auto-generated method stub
-        return null;
+        // Create a new DFA instance to return later
+        DFA dfaCompliment = new DFA();
+
+        // Compute and copy over the compliment of the set of all final states
+        Set<DFAState> finalStatesCompliment = this.states;
+        finalStatesCompliment.removeAll(this.finalStates);
+        for (DFAState s: finalStatesCompliment) {
+            dfaCompliment.addFinalState(s.getName());
+        }
+
+        // Copy over the start state
+        dfaCompliment.addStartState(this.startState.getName());
+
+        // Copy over all of the normal states
+        for(DFAState s: this.states) {
+            dfaCompliment.addState(s.getName());
+        }
+
+        // Copy over the transitions and, by proxy, the alphabet
+        this.transitions.forEach((stp, state) ->
+            dfaCompliment.addTransition(
+                stp.getState(),
+                stp.getTransition(),
+                state.getName()
+            )
+        );
+
+        // Finally, return the compliment
+        return dfaCompliment;
     }
 
     @Override
     public boolean accepts(String s) {
-        // TODO Auto-generated method stub
-        return false;
+        // Parse through the input string
+        s = s.trim();
+        for (int i = 0; i < s.length(); i++) {
+            // Gets the state that the current state and symbol would iterate to
+            // If this variable is null, then the transition did not exist
+            DFAState newState = (DFAState) getToState(currentState, s.charAt(i));
+
+            // If the newState exists, reassign current state.
+            // Otherwise, return false as this is an indication of an input string that would cause
+            // a DFA error to occur
+            if (newState != null)
+                currentState = newState;
+            else
+                return false;
+        }
+
+        // If the current state we made it to is final, return true.
+        // Otherwise, return false as the string would not be accepted.
+        if (finalStates.contains(currentState))
+            return true;
+        else
+            return false;
     }
 
     @Override
     public State getToState(DFAState from, char onSymb) {
-        // TODO Auto-generated method stub
-        return null;
+        // Make a STP object out of the current state name and transition
+        StateTransitionPair stp = new StateTransitionPair(from.getName(), onSymb);
+
+        // Return the value that this stp key looks up
+        // Returns null if the transition does not exist
+        return transitions.get(stp);
     }
 
 }

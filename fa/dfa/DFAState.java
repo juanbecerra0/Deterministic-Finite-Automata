@@ -42,9 +42,9 @@ public class DFAState extends State {
      * This is used to ensure that there are never duplicate states in DFA's sets
      */
     @Override
-    public boolean equals(Object state) {
-        DFAState otherState = (DFAState) state;
-        return this.name.equals(otherState.getName());
+    public boolean equals(Object object) {
+        DFAState otherState = (DFAState) object;
+        return this.hashCode == otherState.hashCode();
     }
 
 }
