@@ -2,6 +2,9 @@ package fa.dfa;
 
 import fa.State;
 import java.util.Set;
+import java.util.HashSet;
+import java.util.HashMap;
+
 
 /**
  * Class that represents a deterministic finite automata. Implements the 
@@ -14,22 +17,27 @@ import java.util.Set;
  */
 public class DFA implements DFAInterface {
 
+    public DFA(){
+        HashMap<String, DFAstate> transitions = new HashMap<String, DFAstate>();
+        HashMap<String, DFAState> sigma = new HashSet<String, DFAState>();
+    }
+
     @Override
     public void addStartState(String name) {
-        // TODO Auto-generated method stub
-
+        sigma.add(name, new DFAState(name, "START"));
     }
 
     @Override
     public void addState(String name) {
-        // TODO Auto-generated method stub
+        sigma.add(name, new DFAState(name, "NORMAL"));
 
     }
 
     @Override
     public void addFinalState(String name) {
-        // TODO Auto-generated method stub
+        if(sigma.contains(name){
 
+        }        sigma.add(name, new DFAState(name, "NORMAL"));
     }
 
     @Override
