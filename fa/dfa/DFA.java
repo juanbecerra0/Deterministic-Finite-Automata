@@ -219,18 +219,23 @@ public class DFA implements DFAInterface {
             // If the newState exists, reassign current state.
             // Otherwise, return false as this is an indication of an input string that would cause
             // a DFA error to occur
-            if (newState != null)
+            if (newState != null) {
                 currentState = newState;
-            else
+            } else {
+                currentState = startState;
                 return false;
+            }
         }
 
         // If the current state we made it to is final, return true.
         // Otherwise, return false as the string would not be accepted.
-        if (finalStates.contains(currentState))
+        if (finalStates.contains(currentState)) {
+            currentState = startState;
             return true;
-        else
+        } else {
+            currentState = startState;
             return false;
+        }
     }
 
     @Override
