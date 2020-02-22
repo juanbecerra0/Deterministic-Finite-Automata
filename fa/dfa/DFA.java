@@ -1,11 +1,11 @@
 package fa.dfa;
 
 import fa.State;
+
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
-
 
 /**
  * Class that represents a deterministic finite automata. Implements the 
@@ -17,67 +17,95 @@ import java.util.HashMap;
  * @author Keegan Saunders
  */
 public class DFA implements DFAInterface {
-    DFAState start;
-    private Map<String, DFAState> transitions;
-    private Set<DFAState> states;
-    private Set<DFAState> finals;
-    private Set<String> alphabet;
 
+    // The start state of the DFA. Included in "states" and can be included in "finals"
+    private DFAState startState;
+    // The set of all states, including all finals and the start state.
+    private Set<DFAState> states;
+    // The set of all final states, which is a subset of all states.
+    private Set<DFAState> finalStates;
+    // The set of all known alphabet symbols.
+    private Set<Character> alphabet;
+    // The HashMap of all transitions. Given a key (concat String of state name and transition), returns a state object reference.
+    private Map<String, DFAState> transitions;
+
+    /**
+     * Initializes all set variables
+     */
     public DFA(){
-        transitions = new HashMap<String, DFAState>();
         states = new HashSet<DFAState>();
-        finals = new HashSet<DFAState>();
-        alphabet = new HashSet<String>();
-        
+        finalStates = new HashSet<DFAState>();
+        alphabet = new HashSet<Character>();
+        transitions = new HashMap<String, DFAState>();
     }
 
     @Override
     public void addStartState(String name) {
-        start = new DFAState(name);
-        states.add(start);
+        // Initializes the start state and adds it to the set of all states.
+        startState = new DFAState(name);
+        states.add(startState);
     }
 
     @Override
     public void addState(String name) {
-        states.add(new DFAState(name));
+        // Initializes a new state and adds to set of all states.
+        DFAState newState = new DFAState(name);
+
+        // If new state is a duplicate, adding is ignored.
+        states.add(newState);
     }
 
     @Override
     public void addFinalState(String name) {
-        DFAState state = new DFAState(name);
-        states.add(state);
-        finals.add(state);
+        // Initializes a new state and adds to set of all states and final states.
+        DFAState newState = new DFAState(name);
+
+        // If new state is a duplicate, adding is ignored.
+        states.add(newState);
+        finalStates.add(newState);
     }
 
     @Override
     public void addTransition(String fromState, char onSymb, String toState) {
-        String key = fromState+onSymb;
-        if(sigma.containsKey(fromState) && sigma.containsKey(toState))
+        // Create a "toState" object
+        DFAState newState = new DFAState(toState);
 
+        // Check if the "new state" is within our set of all states. If not, simply return.
+        if(!states.contains(new DFAState(toState)))
+            return;
+
+        // Add symbol to alphabet if it is not already in there
+        alphabet.add(onSymb);
+
+        // Create a "key" values, which is the name of a state and the symbol concatenated.
+        String inputKey = fromState + onSymb;
+
+        // Maps the key to the corresponding state
+        transitions.put(inputKey, newState);
     }
 
     @Override
     public Set<? extends State> getStates() {
-        // TODO Auto-generated method stub
-        return null;
+        // Returns set of all states
+        return states;
     }
 
     @Override
     public Set<? extends State> getFinalStates() {
-        // TODO Auto-generated method stub
-        return null;
+        // Returns set of all final states
+        return finalStates;
     }
 
     @Override
     public State getStartState() {
-        // TODO Auto-generated method stub
-        return null;
+        // Returns the start state
+        return startState;
     }
 
     @Override
     public Set<Character> getABC() {
-        // TODO Auto-generated method stub
-        return null;
+        // Returns the alphabet set
+        return alphabet;
     }
 
     @Override

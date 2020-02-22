@@ -12,103 +12,39 @@ import fa.State;
  */
 public class DFAState extends State {
 
-    /**
-     * Enumerated types for a DFAState object
-     */
-    public enum Type {
-        START,
-        FINAL,
-        STARTANDFINAL,
-        NORMAL
-    }
-
-    private Type type;
+    // Hash code used in 
+    private final int hashCode;
 
     /**
-     * Constructs a DFAState object given a unique name and an enumerated type
-     * 
-     * Types include:
-     * - START
-     * - FINAL
-     * - STARTANDFINAL
-     * - NORMAL
-     * 
-     * If invalid type is given, throws IllegalArgumentException
+     * Constructs a DFAState object given a unique name.
+     * initializes a hash code based on the name.
      * 
      * @param name
-     * @param type
-     * 
-     * @throws IllegalArgumentException
      */
-    public DFAState(String name, String type) {
-        switch(type) {
-            case "START":
-                this.type = Type.START;
-                break;
-            case "FINAL":
-                this.type = Type.FINAL;
-                break;
-            case "STARTANDFINAL":
-                this.type = Type.STARTANDFINAL;
-                break;
-            case "NORMAL":
-                this.type = Type.NORMAL;
-                break;
-            default:
-                throw new IllegalArgumentException("DFAState type " + type + " is not a valid type! " +
-                "Try START, FINAL, STARTANDFINAL, or NORMAL.");
-        }
-
+    public DFAState(String name) {
         this.name = name;
+        this.hashCode = name.hashCode();
     }
 
     /**
-     * Changes the type of a DFAState object.
+     * Returns a hashcode based on the DFAState's name
      * 
-     * If invalid type is given, throws IllegalArgumentException
-     * 
-     * @param type
+     * This is used to ensure that there are never duplicate states in DFA's sets
      */
-    public void changeType(String type) {
-        switch(type) {
-            case "START":
-                this.type = Type.START;
-                break;
-            case "FINAL":
-                this.type = Type.FINAL;
-                break;
-            case "STARTANDFINAL":
-                this.type = Type.STARTANDFINAL;
-                break;
-            case "NORMAL":
-                this.type = Type.NORMAL;
-                break;
-            default:
-                throw new IllegalArgumentException("DFAState type " + type + " is not a valid type! " +
-                "Try START, FINAL, STARTANDFINAL, or NORMAL.");
-        }
+    @Override
+    public int hashCode() {
+        return hashCode;
     }
 
     /**
-     * Returns a string representing the DFAState's type.
+     * Returns whether or not two DFAState objects are the same, based on their names.
      * 
-     * A returned empty string means something has gone very wrong.
-     * 
-     * @return Type (String)
+     * This is used to ensure that there are never duplicate states in DFA's sets
      */
-    public String getType() {
-        switch(type) {
-            case START:
-                return "STATE";
-            case FINAL:
-                return "FINAL";
-            case STARTANDFINAL:
-                return "STARTANDFINAL";
-            case NORMAL:
-                return "NORMAL";
-            default:
-                return "";
-        }
+    @Override
+    public boolean equals(Object state) {
+        DFAState otherState = (DFAState) state;
+        return this.name.equals(otherState.getName());
     }
 
 }
