@@ -195,7 +195,7 @@ public class DFA implements DFAInterface {
         }
 
         // Copy over the transitions and, by proxy, the alphabet
-        this.transitions.forEach((stp, state) ->
+        transitions.forEach((stp, state) ->
             dfaCompliment.addTransition(
                 stp.getState(),
                 stp.getTransition(),
@@ -243,4 +243,59 @@ public class DFA implements DFAInterface {
         return transitions.get(stp);
     }
 
+    @Override
+    public String toString() {
+        // Build a string using a string builder
+        StringBuilder returnString = new StringBuilder();
+
+        // Q Section
+        returnString.append("Q = { ");
+        for(DFAState s: states) {
+            returnString.append(s.getName() + " ");
+        }
+        returnString.append("}\n");
+
+        // Sigma section
+        returnString.append("Sigma = { ");
+        for(char c: alphabet) {
+            returnString.append(c + " ");
+        }
+        returnString.append("}\n");
+
+        // delta section
+        returnString.append("delta =\n\t\t");
+        // First, graph all transitions
+        for(char c: alphabet) {
+            returnString.append(c + "\t");
+        }
+        returnString.append("\n");
+        // Then, for each state, where you would go given a transition
+        for(DFAState s: states) {
+            returnString.append("\t" + s.getName() + "\t");
+            for(char c: alphabet) {
+                StateTransitionPair stp = new StateTransitionPair(s.getName(), c);
+                // If transition exists, print target
+                // Else, print whitespace
+                if(transitions.containsKey(stp)) {
+                    returnString.append(transitions.get(stp).getName() + "\t");
+                } else {
+                    returnString.append(" \t");
+                }
+            }
+            returnString.append("\n");
+        }
+
+        // q0 section
+        returnString.append("q0 = " + startState.getName() + "\n");
+
+        // F section
+        returnString.append("F = { ");
+        for(DFAState fs: finalStates) {
+            returnString.append(fs.getName() + " ");
+        }
+        returnString.append("}\n");
+
+        // Finally, return constructed string
+        return returnString.toString();
+    }
 }
