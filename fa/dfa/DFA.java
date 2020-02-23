@@ -91,6 +91,8 @@ public class DFA implements DFAInterface {
 
     // The current state in the DFA simulation. Used in "accepts" and "getToState" methods
     private DFAState currentState;
+    // This is used when evaluating a compliment DFA
+    private boolean isCompliment;
 
     /**
      * Initializes all set variables
@@ -100,6 +102,7 @@ public class DFA implements DFAInterface {
         finalStates = new HashSet<DFAState>();
         alphabet = new HashSet<Character>();
         transitions = new HashMap<StateTransitionPair, DFAState>();
+        isCompliment = false;
     }
 
     @Override
@@ -174,14 +177,27 @@ public class DFA implements DFAInterface {
         return alphabet;
     }
 
+    /**
+     * Setter for isCompliment
+     * 
+     * @param isCompliment
+     */
+    private void setIsCompliment(boolean isCompliment) {
+        this.isCompliment = isCompliment;
+    }
+
     @Override
     public DFA complement() {
         // Create a new DFA instance to return later
         DFA dfaCompliment = new DFA();
+        dfaCompliment.setIsCompliment(true);
 
         // Compute and copy over the compliment of the set of all final states
-        Set<DFAState> finalStatesCompliment = this.states;
-        finalStatesCompliment.removeAll(this.finalStates);
+        Set<DFAState> finalStatesCompliment = new HashSet<DFAState>();
+        for(DFAState s: states) {
+            finalStatesCompliment.add(s);
+        }
+        finalStatesCompliment.removeAll(finalStates);
         for (DFAState s: finalStatesCompliment) {
             dfaCompliment.addFinalState(s.getName());
         }
@@ -190,7 +206,7 @@ public class DFA implements DFAInterface {
         dfaCompliment.addStartState(this.startState.getName());
 
         // Copy over all of the normal states
-        for(DFAState s: this.states) {
+        for(DFAState s: states) {
             dfaCompliment.addState(s.getName());
         }
 
@@ -217,11 +233,16 @@ public class DFA implements DFAInterface {
             DFAState newState = (DFAState) getToState(currentState, s.charAt(i));
 
             // If the newState exists, reassign current state.
+            // Else if the state is a compliment, return true as rejected symbols indicates a valid DFAC.
             // Otherwise, return false as this is an indication of an input string that would cause
             // a DFA error to occur
             if (newState != null) {
                 currentState = newState;
-            } else {
+            } else if (this.isCompliment) {
+                currentState = startState;
+                return true;
+            }
+            else {
                 currentState = startState;
                 return false;
             }
