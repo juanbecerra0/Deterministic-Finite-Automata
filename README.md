@@ -6,17 +6,25 @@
 
 ## Overview
 
-Concisely explain what the program does. If this exceeds a couple of
-sentences, you're going too far. Generally you should be pulling this
-right from the project specification. I don't want you to just cut and
-paste, but paraphrase what is stated in the project specification.
+Given a properly formatted file, constructs a deterministic finite automata
+object, fit with several methods that allows a user to add states, symbols, 
+and simulate a DFA parsing a string. Within the driver class, several tests 
+can be given as input and the program will output DFA information in set 
+notation to the console.
 
 ## Compiling and Using
 
-This section should tell the user how to compile your code.  It is
-also appropriate to instruct the user how to use your code. Does your
-program require user input? If so, what does your user need to know
-about it to use it as quickly as possible?
+To compile the program, go to the route directory and type this into the console:
+
+```
+javac fa/dfa/DFADriver.java
+```
+
+To run the compiled program's test suite, type this into the console:
+
+```
+java fa.dfa.DFADriver ./tests/(testfile)
+```
 
 ## Discussion
 
@@ -45,16 +53,4 @@ working solution to their requirements?
 
 ## Extra Credit
 
-If the project had opportunities for extra credit that you attempted,
-be sure to call it out so the grader does not overlook it.
-
-## Sources used
-
-If you used any sources outside of the lecture notes, class lab files,
-or text book you need to list them here. If you looked something up on
-stackoverflow.com and fail to cite it in this section it will be
-considered plagiarism and be dealt with accordingly. So be safe CITE!
-[Here is some help creating links](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links)
-
-----------
-This README template is using Markdown. To preview your README output, you can copy your file contents to a Markdown editor/previewer such as [https://stackedit.io/editor](https://stackedit.io/editor).
+Extra credit was not offered in this assignment, but we won't turn it down ;)
