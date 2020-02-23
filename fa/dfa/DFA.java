@@ -45,6 +45,8 @@ public class DFA implements DFAInterface {
          * Returns unique computer hashcode.
          * 
          * Used to ensure that the key value of transitions Map is unique.
+         * 
+         * @return hashCode
          */
         @Override
         public int hashCode() {
@@ -179,11 +181,13 @@ public class DFA implements DFAInterface {
         // Create a new DFA instance to return later
         DFA dfaCompliment = new DFA();
 
-        // Compute and copy over the compliment of the set of all final states
+        // Copy over the set of all states
         Set<DFAState> finalStatesCompliment = new LinkedHashSet<DFAState>();
         for(DFAState s: states) {
             finalStatesCompliment.add(s);
         }
+
+        // Find the difference of all states and finals states (ie, all non-final states are now final)
         finalStatesCompliment.removeAll(finalStates);
         for (DFAState s: finalStatesCompliment) {
             dfaCompliment.addFinalState(s.getName());

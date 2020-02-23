@@ -30,6 +30,8 @@ public class DFAState extends State {
      * Returns a hashcode based on the DFAState's name
      * 
      * This is used to ensure that there are never duplicate states in DFA's sets
+     * 
+     * @return hashCode
      */
     @Override
     public int hashCode() {
@@ -40,6 +42,8 @@ public class DFAState extends State {
      * Returns whether or not two DFAState objects are the same, based on their names.
      * 
      * This is used to ensure that there are never duplicate states in DFA's sets
+     * 
+     * @param DFAState object
      */
     @Override
     public boolean equals(Object object) {
