@@ -3,7 +3,7 @@ package fa.dfa;
 import fa.State;
 
 import java.util.Set;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -96,9 +96,9 @@ public class DFA implements DFAInterface {
      * Initializes all set variables
      */
     public DFA(){
-        states = new HashSet<DFAState>();
-        finalStates = new HashSet<DFAState>();
-        alphabet = new HashSet<Character>();
+        states = new LinkedHashSet<DFAState>();
+        finalStates = new LinkedHashSet<DFAState>();
+        alphabet = new LinkedHashSet<Character>();
         transitions = new HashMap<StateTransitionPair, DFAState>();
     }
 
@@ -180,7 +180,7 @@ public class DFA implements DFAInterface {
         DFA dfaCompliment = new DFA();
 
         // Compute and copy over the compliment of the set of all final states
-        Set<DFAState> finalStatesCompliment = new HashSet<DFAState>();
+        Set<DFAState> finalStatesCompliment = new LinkedHashSet<DFAState>();
         for(DFAState s: states) {
             finalStatesCompliment.add(s);
         }
